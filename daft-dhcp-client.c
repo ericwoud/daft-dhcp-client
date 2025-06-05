@@ -310,10 +310,11 @@ dhcp_option_set(uint8_t* options, uint8_t code, uint8_t* data, size_t len)
 inline static void
 addr_print(char* msg, uint8_t* pos, size_t count)
 {
-        printf("%s", msg);
+        printf("%s=", msg);
         while (count--) {
-                printf("=%u.%u.%u.%u", pos[0],
+                printf("%u.%u.%u.%u", pos[0],
                        pos[1], pos[2], pos[3]);
+                if (count) printf(",");
         }
         printf("\n");
 
