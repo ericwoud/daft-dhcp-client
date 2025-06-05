@@ -312,7 +312,7 @@ addr_print(char* msg, uint8_t* pos, size_t count)
 {
         printf("%s", msg);
         while (count--) {
-                printf(" %u.%u.%u.%u", pos[0],
+                printf("=%u.%u.%u.%u", pos[0],
                        pos[1], pos[2], pos[3]);
         }
         printf("\n");
@@ -325,16 +325,16 @@ dhcp_type_print(uint8_t* msg_type_code)
         printf("Message-Type");
         switch (*msg_type_code) {
         case DHCP_MESSAGE_TYPE_OFFER:
-                printf(" OFFER");
+                printf("=OFFER");
                 break;
         case DHCP_MESSAGE_TYPE_PACK:
-                printf(" ACK");
+                printf("=ACK");
                 break;
         case DHCP_MESSAGE_TYPE_PNACK:
-                printf(" NACK");
+                printf("=NACK");
                 break;
         default:
-                printf(" UNKNOWN");
+                printf("=UNKNOWN");
         }
         printf("\n");
 }
@@ -345,13 +345,13 @@ dhcp_print(struct dhcphdr* dhcp)
         if (dhcp->chaddr) {
                 struct ether_addr ether;
                 memcpy(ether.ether_addr_octet, dhcp->chaddr, ETHER_ADDR_LEN);
-                printf("Your-MAC %s\n", ether_ntoa(&ether));
+                printf("Your-MAC=%s\n", ether_ntoa(&ether));
         }
 
         if (dhcp->yiaddr) {
                 struct in_addr ip;
                 ip.s_addr = dhcp->yiaddr;
-                printf("Your-IP %s\n", inet_ntoa(ip));
+                printf("Your-IP=%s\n", inet_ntoa(ip));
         }
 
         size_t len = 0;
@@ -379,7 +379,7 @@ dhcp_print(struct dhcphdr* dhcp)
                         addr_print("Domain-Name-Servers", cur_pos, op_len / 4);
                 } else if (code == DHCP_OPTION_DOMAIN_NAME
                            && op_len > 0) {
-                        printf("Domain-Name %.*s\n",
+                        printf("Domain-Name=%.*s\n",
                                (int)op_len, cur_pos);
                 } else if (code == DHCP_OPTION_BROADCAST_ADDRESS
                            && op_len == 4) {
@@ -389,22 +389,22 @@ dhcp_print(struct dhcphdr* dhcp)
                         addr_print("Server-ID", cur_pos, 1);
                 } else if (code == DHCP_OPTION_LEASE_TIME
                            && op_len == 4) {
-                        printf("Lease-Time %d\n",
+                        printf("Lease-Time=%d\n",
                                htonl(*(uint32_t*)cur_pos));
                 } else if (code == DHCP_OPTION_MSG
                            && op_len > 0) {
-                        printf("Server-Message \"%.*s\"\n",
+                        printf("Server-Message=\"%.*s\"\n",
                                (int)op_len, cur_pos);
                 } else if (code == DHCP_OPTION_RENEWAL_TIME
                            && op_len == 4) {
-                        printf("Renewal-Time %d\n",
+                        printf("Renewal-Time=%d\n",
                                htonl(*(uint32_t*)cur_pos));
                 } else if (code == DHCP_OPTION_REBINDING_TIME
                            && op_len == 4) {
-                        printf("Rebinding-Time %d\n",
+                        printf("Rebinding-Time=%d\n",
                                htonl(*(uint32_t*)cur_pos));
                 } else {
-                        log_debug("Undefined-code %d\n", code);
+                        log_debug("Undefined-code=%d\n", code);
                 }
                 cur_pos += op_len;
                 len += op_len;
