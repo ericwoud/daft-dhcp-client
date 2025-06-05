@@ -320,6 +320,18 @@ addr_print(char* msg, uint8_t* pos, size_t count)
 }
 
 inline static void
+mask_print(char* msg, uint8_t* pos)
+{
+        int mask = 0;
+        for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 8; j++) {
+                        if (pos[i] & (1<<j)) mask++
+                }
+        }
+        printf("%s=%d\n", msg, mask);
+}
+
+inline static void
 dhcp_type_print(uint8_t* msg_type_code)
 {
         printf("MessageType");
@@ -370,7 +382,7 @@ dhcp_print(struct dhcphdr* dhcp)
                         dhcp_type_print(cur_pos);
                 } else if (code == DHCP_OPTION_REQ_SUBNET_MASK
                            && op_len == 4) {
-                        addr_print("SubnetMask", cur_pos, 1);
+                        mask_print("SubnetMask", cur_pos);
                 } else if (code == DHCP_OPTION_ROUTER
                            && op_len >= 4 && op_len % 4 == 0) {
                         addr_print("DefaultGateways", cur_pos, op_len / 4);
