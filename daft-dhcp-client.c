@@ -322,7 +322,7 @@ addr_print(char* msg, uint8_t* pos, size_t count)
 inline static void
 dhcp_type_print(uint8_t* msg_type_code)
 {
-        printf("Message-Type");
+        printf("MessageType");
         switch (*msg_type_code) {
         case DHCP_MESSAGE_TYPE_OFFER:
                 printf("=OFFER");
@@ -345,13 +345,13 @@ dhcp_print(struct dhcphdr* dhcp)
         if (dhcp->chaddr) {
                 struct ether_addr ether;
                 memcpy(ether.ether_addr_octet, dhcp->chaddr, ETHER_ADDR_LEN);
-                printf("Your-MAC=%s\n", ether_ntoa(&ether));
+                printf("YourMAC=%s\n", ether_ntoa(&ether));
         }
 
         if (dhcp->yiaddr) {
                 struct in_addr ip;
                 ip.s_addr = dhcp->yiaddr;
-                printf("Your-IP=%s\n", inet_ntoa(ip));
+                printf("YourIP=%s\n", inet_ntoa(ip));
         }
 
         size_t len = 0;
@@ -370,41 +370,41 @@ dhcp_print(struct dhcphdr* dhcp)
                         dhcp_type_print(cur_pos);
                 } else if (code == DHCP_OPTION_REQ_SUBNET_MASK
                            && op_len == 4) {
-                        addr_print("Subnet-Mask", cur_pos, 1);
+                        addr_print("SubnetMask", cur_pos, 1);
                 } else if (code == DHCP_OPTION_ROUTER
                            && op_len >= 4 && op_len % 4 == 0) {
-                        addr_print("Default-Gateways", cur_pos, op_len / 4);
+                        addr_print("DefaultGateways", cur_pos, op_len / 4);
                 } else if (code == DHCP_OPTION_DNS
                            && op_len >= 4 && op_len % 4 == 0) {
-                        addr_print("Domain-Name-Servers", cur_pos, op_len / 4);
+                        addr_print("DomainNameServers", cur_pos, op_len / 4);
                 } else if (code == DHCP_OPTION_DOMAIN_NAME
                            && op_len > 0) {
-                        printf("Domain-Name=%.*s\n",
+                        printf("DomainName=%.*s\n",
                                (int)op_len, cur_pos);
                 } else if (code == DHCP_OPTION_BROADCAST_ADDRESS
                            && op_len == 4) {
-                        addr_print("Broadcast-Address", cur_pos, 1);
+                        addr_print("BroadcastAddress", cur_pos, 1);
                 } else if (code == DHCP_OPTION_SERVER_ID
                            && op_len == 4) {
-                        addr_print("Server-ID", cur_pos, 1);
+                        addr_print("ServerID", cur_pos, 1);
                 } else if (code == DHCP_OPTION_LEASE_TIME
                            && op_len == 4) {
-                        printf("Lease-Time=%d\n",
+                        printf("LeaseTime=%d\n",
                                htonl(*(uint32_t*)cur_pos));
                 } else if (code == DHCP_OPTION_MSG
                            && op_len > 0) {
-                        printf("Server-Message=\"%.*s\"\n",
+                        printf("ServerMessage=\"%.*s\"\n",
                                (int)op_len, cur_pos);
                 } else if (code == DHCP_OPTION_RENEWAL_TIME
                            && op_len == 4) {
-                        printf("Renewal-Time=%d\n",
+                        printf("RenewalTime=%d\n",
                                htonl(*(uint32_t*)cur_pos));
                 } else if (code == DHCP_OPTION_REBINDING_TIME
                            && op_len == 4) {
-                        printf("Rebinding-Time=%d\n",
+                        printf("RebindingTime=%d\n",
                                htonl(*(uint32_t*)cur_pos));
                 } else {
-                        log_debug("Undefined-code=%d\n", code);
+                        log_debug("UndefinedCode=%d\n", code);
                 }
                 cur_pos += op_len;
                 len += op_len;
